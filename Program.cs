@@ -29,7 +29,7 @@ using System.Runtime.Intrinsics.X86;
 
 
 
-User[] availableUsers = { new User("John", 30, true), new User("Marius", 28, false), new User("Vanja", 26, false), new User("Oliver", 14, false) };
+User[] availableUsers = { new User("John", 30, true, false), new User("Marius", 28, false, false), new User("Vanja", 26, false, false), new User("Oliver", 14, false, false) };
 
 
 
@@ -45,22 +45,59 @@ Console.WriteLine(@$"Available commands:
     [E]xit
 ");
 Console.Write("Type a command: ");
+
 string choice = Console.ReadLine().ToUpper();
 Console.WriteLine();
 
-if (choice == "L")
+while (choice != "E")
 {
-    Console.WriteLine("Other FriendFace users: ");
-    for (int i = 1; i < availableUsers.Length; i++)
+    Console.WriteLine(@$"Available commands: 
+    [L]ist users
+    [F]riend list
+    [E]xit
+");
+    while (choice == "L")
     {
-        Console.WriteLine(availableUsers[i].userName + $" [{i}]");
+        Console.WriteLine("Other FriendFace users: ");
+        for (int i = 1; i < availableUsers.Length; i++)
+        {
+            Console.WriteLine(availableUsers[i].userName + $" [{i}]");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine(@"To add a user as a friend, type the number next to their name.
+To go back, type [B]");
+
+        var cmd = Console.ReadLine();
+        bool isNum = int.TryParse(cmd, out var userNum);
+        while (!isNum)
+        {
+            Console.WriteLine("Invalid command, you didn't write a proper number, try again");
+        }
+
+        while (isNum)
+        {
+            availableUsers[0].AddFriend(availableUsers, userNum);
+
+            Console.WriteLine(availableUsers[userNum].userName + " is now your friend!");
+            cmd = Console.ReadLine();
+            isNum = int.TryParse(cmd, out userNum);
+
+            if (cmd == "B")
+            {
+                break;
+            }
+
+        }
+
+        choice = Console.ReadLine().ToUpper();
+
     }
-
-    Console.WriteLine();
-    Console.WriteLine(@"To add a user as a friend, type the number next to their name.
-To go back, type [E]");
+    while (choice == "F")
+    {
+        Console.WriteLine("Your friends: ");
+    }
 }
-
 //Oppgave Social Media
 
 //    Lag applikasjon FriendFace. Det er tiltenkt at dette skal bli det nyeste kule sosiale mediet som tar verden med storm. Her trenger en bruker en profilside med diverse info om seg (ta gjerne inspirasjon fra andre sosiale medier),
